@@ -1,0 +1,27 @@
+---
+id: pgconf-asia-2017
+base_name: pgroonga-2
+tags:
+- rabbit
+- postgresql
+- pgroonga
+- pgconfasia
+presentation_date: '2017-12-05'
+presentation_start_time: '2017-12-05T16:20:00+09:00'
+presentation_end_time: '2017-12-05T17:00:00+09:00'
+version: 2017.12.5.0
+licenses:
+- CC-BY-SA-4.0
+- CC-BY-3.0
+slideshare_id: 
+speaker_deck_id: 
+ustream_id: 
+vimeo_id: 
+youtube_id: 
+author:
+  markup_language: :rd
+  name: Kouhei Sutou
+  email: kou@clear-code.com
+  rubygems_user: kou
+  slideshare_user: kou
+  speaker_deck_user: 
