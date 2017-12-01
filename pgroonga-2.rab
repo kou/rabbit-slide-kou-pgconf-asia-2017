@@ -77,7 +77,7 @@ when you need\n
 
   * Use FTS server\n
     (('note:全文検索サーバーを使う'))
-  * PostgreSQLを使う\n
+  * Use PostgreSQL\n
     (('note:PostgreSQLを使う'))
 
 = FTS server: Pros\n(('note:全文検索サーバー案：メリット'))
@@ -91,7 +91,7 @@ when you need\n
 
 = FTS server: Cons1\n(('note:全文検索サーバー案：デメリット1'))
 
-  * Large impl. cost\n
+  * Large implementation cost\n
     (('note:実装コスト大'))
     * Learn how to use from scratch\n
       (('note:使い方を1から学ぶ必要がある'))
@@ -105,51 +105,73 @@ when you need\n
     * Learn how to operate from scratch\n
       (('note:運用方法を1から学ぶ必要がある'))
 
-= PostgreSQL案\nメリット
+= PostgreSQL: Pros1\n(('note:PostgreSQL案：メリット1'))
 
-  * 実装コスト小
-    * 新しく覚えることが少ない
-    * データの一元管理
-  * メンテナンスコスト小
-    * 既存の運用ノウハウを使える
+  * Less implementation cost\n
+    (('note:実装コスト小'))
+    * Less things to be learned\n
+      (('note:新しく覚えることが少ない'))
+    * Can manage data at the same place\n
+      (('note:データの一元管理'))
 
-= PostgreSQL案\nデメリット
+= PostgreSQL: Pros2\n(('note:PostgreSQL案：メリット2'))
 
-  * 組込機能では機能不足
-  * SQLの表現力不足
-    * 1クエリーで実現できない機能アリ
-    * ↑は性能を出しにくい
+  * Less operation cost\n
+    (('note:メンテナンスコスト小'))
+    * The current operation knowledge is reusable\n
+      (('note:既存の運用ノウハウを使える'))
 
-= 実現方法\n第3の選択肢
+= PostgreSQL: Cons\n(('note:PostgreSQL案：デメリット'))
 
-  * PostgreSQL経由（SQL）で\n
-    全文検索エンジンを使う
+  * Built-in features aren't enough\n
+    (('note:組込機能では機能不足'))
+  * SQL limits efficiency\n
+    (('note:SQLの表現力不足'))
+    * e.g.: SQL needs multiple queries for a process that can be done by 1 query by FTS server\n
+      (('note:例：全文検索サーバーなら1クエリーで実現できる処理にSQLだと複数クエリー必要なことがある'))
 
-= メリット
+= The 3rd option\n(('note:第3の選択肢'))
 
-  * 高速で豊富な機能
-  * 実装コスト小
-  * メンテナンスコスト小
+  * Use FTS engine via PostgreSQL (SQL)\n
+    (('note:PostgreSQL経由（SQL）で全文検索エンジンを使う'))
 
-= デメリット
+= Pros(('note:メリット'))
 
-  * PostgreSQLに拡張機能が必要
-    * DBaaSで使えない
+  * Fast and rich features\n
+    (('note:高速で豊富な機能'))
+  * Less implementation cost\n
+    (('note:実装コスト小'))
+  * Less operation cost\n
+    (('note:メンテナンスコスト小'))
 
-= オススメの選択肢\n全文検索の知識ナシ
+= Cons\n(('note:デメリット'))
 
-  * まだ単純な機能で十分
-    * データ少：PostgreSQLでLIKE\n
-      (('note:（数十万件とか）'))
-  * いまどきの全文検索機能が必要
-    * PostgreSQL経由で全文検索エンジン
+  * Need PostgreSQL extension\n
+    (('note:PostgreSQLに拡張機能が必要'))
+    * Not available on DBaaS\n
+      (('note:DBaaSで使えない'))
 
-= オススメの選択肢\n全文検索の知識アリ
+= Option: No FTS knowledge\n(('note:オススメの選択肢：全文検索の知識ナシ'))
 
-  * カリカリにチューニングしたい
-    * PostgreSQL＋全文検索サーバー
-  * それ以外
-    * PostgreSQL経由で全文検索エンジン
+  * Need only simple features\n
+    (('note:まだ単純な機能で十分'))
+    * Less data: LIKE with PostgreSQL\n
+      (('note:データ少：PostgreSQLでLIKE'))
+  * Need up-to-date FTS features\n
+    (('note:いまどきの全文検索機能が必要'))
+    * FTS engine via PostgreSQL\n
+      (('note:PostgreSQL経由で全文検索エンジン'))
+
+= Option: With FTS knowledge\n(('note:オススメの選択肢：全文検索の知識アリ'))
+
+  * Need tuned FTS feature\n
+    (('note:カリカリにチューニングしたい'))
+    * PostgreSQL + FTS server\n
+      (('note:PostgreSQL＋全文検索サーバー'))
+  * Others\n
+    (('note:それ以外'))
+    * FTS engine via PostgreSQL\n
+      (('note:PostgreSQL経由で全文検索エンジン'))
 
 = 説明する選択肢
 
