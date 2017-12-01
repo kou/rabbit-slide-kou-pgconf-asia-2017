@@ -871,36 +871,44 @@ Great! But why?\n
   * Synonym expansion\n
     (('note:同義語展開'))
 
-= 全文検索システムの実装\n次の一歩
+= FTS system: Next step\n(('note:全文検索システム：次の一歩'))
 
-  * 構造化データ対応
-    * オフィス文書・HTMLなど
-  * 対応に必要な処理
-    * テキスト抽出
-    * メタデータ抽出(('note:（例：タイトル・更新日時）'))
-    * スクリーンショット作成(('note:（なおよい）'))
+  * Support structured data\n
+    (('note:構造化データ対応'))
+    * Office document, HTML, ...\n
+      (('note:オフィス文書・HTMLなど'))
+  * Needed features\n
+    (('note:対応に必要な処理'))
+    * Text/metadata extraction\n
+      (('note:テキスト・メタデータ抽出'))
+    * Create screenshot\n
+      (('note:スクリーンショット作成'))
 
-= 抽出ツール
+= Extraction tool\n(('note:抽出ツール'))
 
   * Apache Tika
-    * Apache Luceneのサブプロジェクト
-    * 対応フォーマット数が多い
+    * Apache Lucene's subproject
+    * Many supported formats\n
+      (('note:対応フォーマットが多い'))
   * ChupaText
-    * Groongaのサブプロジェクト
-    * スクリーンショット作成対応
+    * Groonga's subproject
+    * Screenshot support\n
+      (('note:スクリーンショット作成対応'))
 
 = ChupaText
 
-  * 対応フォーマット
+  * Supported formats(('note:（対応フォーマット）'))
     * Word/Excel/PowerPoint
     * ODT/ODS/ODP(('note:（OpenDocument）'))
     * PDF/HTML/XML/CSV/...
-  * インターフェイス
-    * HTTPとコマンドライン
+  * Interface(('note:（インターフェイス）'))
+    * HTTP and command line\n
+      (('note:HTTPとコマンドライン'))
 
-= ChupaText：インストール
+= Install\n(('note:インストール'))
 
-  * DockerかVagrantを使うのが楽
+  * Use Docker or Vagrant\n
+    (('note:DockerかVagrantを使うのが楽'))
     * (('tag:xx-small'))
       ((<"https://github.com/ranguba/chupa-text-docker"|URL:https://github.com/ranguba/chupa-text-docker>))
     * (('tag:xx-small'))
@@ -915,49 +923,49 @@ Great! But why?\n
   % cd chupa-text-docker
   % docker-compose up --build
 
-= ChupaText：使い方
+= Usage\n(('note:使い方'))
 
   # coderay console
   % curl \
       --form data=@XXX.pdf \
       http://localhost:20080/extraction.json
 
-= ChupaText：結果例
+= Result example\n(('note:結果例'))
 
   # coderay json
 
   {
-    "mime-type": "application/pdf", # 元データのMIMEタイプ
-    "size": 147159, # メタデータ
+    "mime-type": "application/pdf", # MIME type for the original data
+    "size": 147159, # Metadata
     ...,
-    "texts": [ # 抽出されたテキスト（N個）
+    "texts": [ # Extracted texts
       {
-        "mime-type": "text/plain", # 抽出後のMIMEタイプ
+        "mime-type": "text/plain", # MIME type for the extracted data
         ...,
-        "creator": "Adobe Illustrator CS3", # メタデータ
-        "body": "This is sample PDF. ...", # 抽出したテキスト
+        "creator": "Adobe Illustrator CS3", # Metadata
+        "body": "This is sample PDF. ...", # Extracted text
         "screenshot": {
-          "mime-type": "image/png", # スクリーンショットのMIMEタイプ
-          "data": "iVBORw...", # Base64にした画像データ
-          "encoding": "base64" # Base64であることを明記
+          "mime-type": "image/png", # MIME type for screenshot
+          "data": "iVBORw...", # Base64-ed image data
+          "encoding": "base64"
         }
       }
     ]
   }
 
-= ChupaText：Web UI
+= Web UI
 
   # image
   # src = images/chupa-text-web-ui-form.png
   # relative_height = 100
 
-= ChupaText：Web UI抽出例
+= Web UI: Extraction example\n(('note:Web UI：抽出例'))
 
   # image
   # src = images/chupa-text-web-ui-extract-metadata.png
   # relative_height = 100
 
-= ChupaText：Web UI抽出例
+= Web UI: Extraction example\n(('note:Web UI：抽出例'))
 
   # image
   # src = images/chupa-text-web-ui-extract-text-and-screenshot.png
@@ -973,136 +981,51 @@ Great! But why?\n
   % vagrant up
 
 (('tag:center'))
-使い方はDocker版と同じ
+Usage is the same as Docker's\n
+(('note:使い方はDocker版と同じ'))
 
-= ChupaText：活用例
+= Use cases(('note:（活用例）'))
 
-  * 抽出したテキスト
-    * PGroongaへ挿入
-  * 抽出したメタデータ
-    * PGroongaへ挿入
-    * 絞り込みに活用
-  * 作成したスクリーンショット
-    * 検索結果表示時に掲載
+  * Extracted text
+    * Insert into PGroonga
+  * Extracted metadata
+    * Insert into PGroonga
+    * Use for condition(('note:（絞り込みに活用）'))
+  * Created screenshot
+    * Show in search result(('note:（検索結果で表示）'))
 
-= まとめ
+= Wrap up\n(('note:まとめ'))
 
-  * PostgreSQL経由で\n
-    全文検索エンジン
-    * 採用の判断材料を提供
-  * 全文検索システム実装例を紹介
+  * FTS engine via PostgreSQL\n
+    (('note:PostgreSQL経由で全文検索エンジン'))
+    * Provide decision info\n
+      (('note:採用の判断材料を提供'))
+
+= Wrap up\n(('note:まとめ'))
+
+  * Show how to impl. FTS system\n
+    (('note:全文検索システム実装例を紹介'))
     * PGroonga
-  * 構造化データの対応方法を紹介
+  * PGroonga 1.0.0 and 2\n
+    (('note:PGroonga 1.0.0と2'))
+    * Painless upgrade
+
+= Wrap up\n(('note:まとめ'))
+
+  * Show how to support structured data\n
+    (('note:構造化データの対応方法を紹介'))
     * ChupaText
 
-= 扱わなかった話題
+= Support service\n(('note:サポートサービス紹介'))
 
-  * 運用について
-    * 障害対策・レプリケーション
-    * ロジカルレプリケーションは\n
-      対応済み！(('note:（少しだけ設定方法を紹介）'))
-  * チューニング
-  * Groongaの機能を直接使う方法
+  * Install support(('note:（導入支援）'))\n
+    (('note:設計支援・性能検証・移行支援・…'))
+  * Development support(('note:（開発支援）'))\n
+    (('note:サンプルコード提供・問い合わせ対応・…'))
+  * Operation support(('note:（運用支援）'))\n
+    (('note:障害対応・チューニング支援・…'))
 
-= ロジカルレプリケーション\npostgresql.conf
-
-  # coderay conf
-  # マスター
-  wal_level = logical
-  max_wal_senders = 10
-  max_replication_slots = 10
-
-= ロジカルレプリケーション\nDB作成・PGroongaインストール
-
-  # coderay sql
-  -- マスター
-  CREATE DATABASE test_master;
-  \c test_master
-  CREATE EXTENSION pgroonga;
-
-= ロジカルレプリケーション\nテーブル作成
-
-  # coderay sql
-  -- マスター
-  CREATE TABLE memos (
-    id integer PRIMARY KEY,
-    content text
-  );
-  CREATE INDEX
-    full_text_search_index ON memos
-    USING pgroonga (id, content);
-
-= ロジカルレプリケーション\nレプリケーション用ユーザー作成
-
-  # coderay sql
-  -- マスター
-  -- pg_hba.confも編集すること
-  CREATE ROLE replica
-    WITH REPLICATION
-      LOGIN PASSWORD 'pass';
-  GRANT SELECT
-    ON ALL TABLES IN SCHEMA public
-    TO replica;
-
-= ロジカルレプリケーション\npublication作成
-
-  # coderay sql
-  -- マスター
-  CREATE PUBLICATION pub
-    FOR TABLE memos;
-
-= ロジカルレプリケーション\nDB作成・PGroongaインストール
-
-  # coderay sql
-  -- スレーブ
-  CREATE DATABASE test_slave;
-  \c test_slave
-  CREATE EXTENSION pgroonga;
-
-= ロジカルレプリケーション\nテーブル作成
-
-  # coderay sql
-  -- スレーブ
-  CREATE TABLE memos (
-    id integer PRIMARY KEY,
-    content text
-  );
-  CREATE INDEX
-    full_text_search_index ON memos
-    USING pgroonga (id, content);
-
-= ロジカルレプリケーション\nsubscription作成
-
-  # coderay sql
-  -- スレーブ
-  CREATE SUBSCRIPTION sub
-    CONNECTION
-      'host=192.168.0.18 port=5432
-       user=replica password=pass
-       dbname=test_master'
-    PUBLICATION pub;
-
-= ロジカルレプリケーション\n確認
-
-  # coderay sql
-  -- マスター
-  INSERT INTO memos VALUES (1, '全文検索');
-  -- スレーブ
-  SELECT * FROM memos
-    WHERE content &@~ '全文検索';
-  --  id | content  
-  -- ----+----------
-  --   1 | 全文検索
-  -- (1 row)
-
-= サポートサービス紹介
-
-  * 導入支援(('note:（設計支援・性能検証・移行支援・…）'))
-  * 開発支援\n
-    (('note:（サンプルコード提供・問い合わせ対応・…）'))
-  * 運用支援(('note:（障害対応・チューニング支援・…）'))
-
-問い合わせ先：
+Contact(('note:（問い合わせ先）'))
 
 (('tag:x-small'))
 ((<"https://www.clear-code.com/contact/?type=groonga"|URL:https://www.clear-code.com/contact/?type=groonga>))
