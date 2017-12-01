@@ -173,337 +173,460 @@ when you need\n
     * FTS engine via PostgreSQL\n
       (('note:PostgreSQL経由で全文検索エンジン'))
 
-= 説明する選択肢
+= Option to be described\n(('note:説明する選択肢'))
 
-PostgreSQL経由で\n
-全文検索\n
-エンジン
+FTS engine via\n
+PostgreSQL\n
+(('note:ostgreSQL経由で全文検索エンジン'))
 
-= 全文検索エンジン\nGroonga（ぐるんが）
+= FTS engine: Groonga\n(('note:全文検索エンジン：Groonga（ぐるんが）'))
 
-  * 組込可能な全文検索エンジン
-    * PostgreSQLに組込→PGoonga
-  * 全文検索サーバーとして\n
-    単独でも使用可能
-    * PostgreSQL＋全文検索サーバー構成\n
-      もできる
+  * Embeddable FTS engine\n
+    (('note:組込可能な全文検索エンジン'))
+    * PGroonga: Groonga in PostgreSQL\n
+      (('note:PGroonga：PostgreSQLに組込'))
+  * Usable as FTS server\n
+    (('note:全文検索サーバーとして単独でも使用可能'))
+    * PostgreSQL + FTS server architecture is also available\n
+      (('note:PostgreSQL＋全文検索サーバー構成もできる'))
 
-= Groongaの得意なこと\nデータの追加・更新
+= Groonga's hobby: data update\n(('note:Groongaの得意な事：データの追加・更新'))
 
-  * 新鮮な情報がすぐ検索可能！
-    * バッチで更新しなくてもよい
-    * チャットくらいの頻度でもOK\n
-      例：ZulipはPGroongaを採用
-  * 更新中も検索性能が落ちない！
-    * 利用ユーザーが多い時でも更新可能
+  * Make fresh data searchable!\n
+    (('note:新鮮な情報をすぐ検索可能！'))
+    * Batch update is needless\n
+      (('note:バッチで更新しなくてもよい'))
+    * Can use as chat backend\n
+      (('note:チャットくらいの頻度でもOK'))\n
+      e.g.: Zulip uses PGroonga\n
+      (('note:例：ZulipはPGroongaを採用'))
 
-= Groongaの得意なこと\n日本語まわり
+= Groonga's hobby: data update\n(('note:Groongaの得意な事：データの追加・更新'))
 
-  * 開発者が日本人
-  * 便利機能が組み込み
+  * Keep search performance while updating!\n
+    (('note:更新中も検索性能が落ちない！'))
+    * Updatable when there are many search users\n
+      (('note:利用ユーザーが多い時でも更新可能'))
 
-(('tag:center'))
-(('tag:margin-top * 3'))
-(('note:もちろん、日本語以外もOK！'))
+= PGroonga\n(('note:PGroonga（ぴーじーるんが）'))
 
-= PGroonga\n（ぴーじーるんが）
-
-  * PostgreSQLのインデックス
-    * B-tree・GINなどと同じレイヤー
-  * 使用方法
+  * PostgreSQL index\n
+    (('note:PostgreSQLのインデックス'))
+    * Alternative of GIN\n
+      (('note:B-tree・GINなどと同じレイヤー'))
+  * Usage\n
+    (('note:使用方法'))
     * (({CREATE INDEX ...}))\n
       (({USING PGroonga ...}))
 
-= PostgreSQLと全文検索
+= PostgreSQL and FTS\n(('note:PostgreSQLと全文検索'))
 
-  * LIKE：組込機能
-  * textsearch：組込機能
-  * pg_trgm：標準添付
-    * アーカイブには含まれている
-    * 別途インストールすれば使える
+  * LIKE: Built-in(('note:（組込機能）'))
+  * textsearch: Built-in(('note:（組込機能）'))
+  * pg_trgm: Contrib(('note:（標準添付）'))
+    * Bundled in the archive\n
+      (('note:アーカイブには含まれている'))
+    * Need to install separately\n
+      (('note:別途インストールすれば使える'))
 
-= LIKEと速度
+= LIKE and performance\n(('note:LIKEと速度'))
 
-  * 少ないデータ
-    * 十分実用的
-    * 400文字×20万件くらいなら1秒とか
-  * 少なくないデータ
-    * 性能問題アリ
+  * Small data\n
+    (('note:少ないデータ'))
+    * Enough performance\n
+      (('note:十分実用的'))
+    * 400 chars X 0.2M recs: < 1sec\n
+      (('note:400文字×20万件くらいなら1秒とか'))
+  * Not small data\n
+    (('note:少なくないデータ'))
+    * Need to tune\n
+      (('note:性能問題アリ'))
 
-= LIKEと全文検索システム
+= LIKE and FTS system\n(('note:LIKEと全文検索システム'))
 
-  * 👍速度が実用的なことも多い
-    * 少ないデータなら
-  * 👎それっぽい順のソート不可
-    * 全文検索ではソート順が重要
-    * ユーザーは先頭n件しか見ない
+👍Enough performance\n
+in most case\n
+(('note:速度が実用的なことも多い'))
+
+  * Data are small in many case\n
+    (('note:少ないデータなら'))
+
+= LIKE and FTS system\n(('note:LIKEと全文検索システム'))
+
+👎Unable to sort\n
+(('note:それっぽい順のソート不可'))
+
+  * Sort is important in FTS\n
+    (('note:全文検索ではソート順が重要'))
+  * Users checks only\n
+    the first N entries\n
+    (('note:ユーザーは先頭N件しか見ない'))
 
 = textsearch
 
-  * インデックスを作るので速い
-  * 言語毎にモジュールが必要
-    * 英語やフランス語などは組込
-    * 日本語は別途必要
-  * 日本語用モジュールはあるが…
-    * 公式にはメンテナンスされていない\n
-      (('note:forkして動くようにしている人はいる'))
+  * 👍Fast search by index\n
+    (('note:インデックスを作るので速い'))
+  * Need module for each lang\n
+    (('note:言語毎にモジュールが必要'))
+    * 👍Modules for English, French, ... are built-in\n
+      (('note:英語やフランス語などは組込'))
+    * 👎Modules for languages in Asia aren't maintained\n
+      (('note:アジア圏の言語用のモジュールはメンテされていない'))
 
 = pg_trgm
 
-  * インデックスを作るので速い
-    * 注：ヒット件数が増えると遅い
-    * 注：テキスト量が多いと遅い
-    * 注：1,2文字の検索は遅い(('note:（米・日本）'))
+  * 👍Fast search by index\n
+    (('note:インデックスを作るので速い'))
+  * 👎Asian languages aren't enough supported\n
+    (('note:アジア圏の言語のサポートは十分ではない'))
+  * 👎Unable to sort\n
+    (('note:それっぽい順のソート不可'))
 
-  * 日本語を使うにはひと工夫必要
-    * C.UTF-8を使う
-    * ソースを変更してビルド
+= PGroonga
 
-= プラグイン
+  * 👍Fast search by index\n
+    (('note:インデックスを作るので速い'))
+  * 👍Sortable\n
+    (('note:それっぽい順のソート可'))
+  * 👍Support all languages\n
+    (('note:全言語対応'))
+  * 👎Need to install separately\n
+    (('note:別途インストールする必要アリ'))
 
-  * pg_bigm
-    * pg_trgmの日本語対応強化版
-    * それっぽい順のソート不可
+= FTS system with PostgreSQL\n(('note:PostgreSQLで全文検索システム'))
+
+  * PGroonga is the best!💯\n
+    (('note:PGroongaがベスト！'))
   * PGroonga
-    * 本気の全文検索エンジンを利用
-    * 速いし日本語もバッチリ！
-    * それっぽい順のソート可
+    * Fast(('note:（高速）'))
+    * Support all langs(('note:（全言語対応）'))
+    * Sortable(('note:（それっぽい順でソート可）'))
 
-= ベンチマーク：pg_bigm
+= FTS system: Basic features\n(('note:全文検索システム：基本機能'))
 
-  # image
-  # src = images/search-pg-bigm.pdf
-  # relative_height = 100
+  * Fast FTS + sort\n
+    (('note:高速全文検索＋ソート'))
+  * Show texts around keyword\n
+    (('note:キーワード周辺テキスト表示'))
+  * Highlight keyword\n
+    (('note:検索キーワードハイライト'))
 
-= ベンチマーク：PGroonga
+= FTS system: Adv. features\n(('note:全文検索システム：高度な機能'))
 
-  # image
-  # src = images/search-pgroonga-pg-bigm.pdf
-  # relative_height = 100
+  * Auto complete\n
+    (('note:オートコンプリート'))
+  * Similar search\n
+    (('note:類似文書検索'))
+  * Synonym expansion\n
+    (('note:同義語展開'))
 
-= PostgreSQLで全文検索システム
+= PGroonga 1.0.0
 
-  * PostgreSQLで全文検索
-    * PGroongaがベスト！💯
-  * PGroonga
-    * 高速
-    * 日本語対応
-    * それっぽい順でソート可
+(('tag:center'))
+↓ are only supported\n
+(('note:以下の機能のみ対応'))
 
-= 基本機能
+  * Fast FTS + sort\n
+    (('note:高速全文検索＋ソート'))
+  * Show texts around keyword\n
+    (('note:キーワード周辺テキスト表示'))
 
-  * 高速全文検索＋ソート
-  * 検索キーワードハイライト
-  * キーワード周辺テキスト表示
+= PGroonga 2
 
-= 高度な機能
+All features are supported!\n
+(('note:全機能対応！'))
 
-  * オートコンプリート
-    * ローマ字対応（zen→全文検索）
-  * 類似文書検索
-  * 同義語展開
-    * 「牛乳」→\n
-      「牛乳 OR ミルク」
+= PGroonga 1.0.0 → 2
 
-= 高速全文検索＋ソート
+  * 😆 Many new features\n
+    (('note:たくさんの新機能'))
+  * 😆 Improve performance\n
+    (('note:性能改善'))
+  * 😞 API is changed\n
+    (('note:APIが変わった'))
+
+= API change\n(('note:API変更'))
+
+(('tag:center'))
+Operator is changed\n
+(('note:演算子変更'))
+
+  @@ → &@~
+  %% → &@
+  ...
+
+= API change\n(('note:API変更'))
+
+(('tag:center'))
+(({pgroonga})) schema is deprecated\n
+(('note:pgroongaスキーマを非推奨に'))
+
+  pgroonga.score → pgroonga_score
+  pgroonga.flush → pgroonga_flush
+  ...
+
+= App for PGroonga 1.0.0\n(('note:PGroonga 1.0.0用アプリ'))
+
+  * Broken with PGroonga 2?\n
+    (('note:PGroonga 2では動かない？'))
+    * No! Work without any changes!\n
+      (('note:何も変更しなくても動くよ！'))
+
+(('tag:center'))
+Great! But why?\n
+(('note:いいじゃん！でもなんで動くの？'))\n
+↓\n
+"Painless upgrade" technique
+
+= Painless upgrade
+
+  * PGroonga 2 provides\n
+    both 1 API and 2 API\n
+    (('note:PGroonag 2は1用のAPIも2用のAPIも両方提供'))
+    * Can use PGroonga 2 with 1 API\n
+      (('note:PGroonga 1のAPIでPGroonag 2を使える'))
+
+= Painless upgrade
+
+  * PGroonga 2 keeps 1 API\n
+    (('note:PGroonga 2の間は1のAPIを維持'))
+  * PGroonga 3 will drop 1 API\n
+    (('note:PGroonga 3で1のAPIを削除予定'))
+    * Just need to upgrade API until 3\n
+      (('note:PGroonga 3までにAPIをアップグレードすればよい'))
+
+= Painless upgrade
+
+  * App for PGroonga 1.0.0 doesn't work with PGroonga 2\n
+    (('note:PGroonga 1.0.0用のアプリがPGroonga 2で動かない'))
+    * It's a bug. Please report it!\n
+      (('note:バグなので報告してね！'))
+
+= FTS system: Basic features\n(('note:全文検索システム：基本機能'))
+
+  * Fast FTS + sort\n
+    (('note:高速全文検索＋ソート'))
+  * Show texts around keyword\n
+    (('note:キーワード周辺テキスト表示'))
+  * Highlight keyword\n
+    (('note:検索キーワードハイライト'))
+
+= Fast FTS + sort\n(('note:高速全文検索＋ソート'))
 
   # image
   # src = images/php-document-search-search.png
   # relative_height = 100
 
-= テーブル定義
+= Table definition
 
   # coderay sql
 
   CREATE TABLE entries (
-    -- 主キーを用意する
-    -- それっぽい順でソートするために必要
+    -- Need primary key
+    -- It's needed for sort
     id integer PRIMARY KEY,
     title text,
     content text
   );
 
-= インデックス定義
+= Index definition
 
   # coderay sql
 
-  -- 全文検索用インデックス
-  -- よくわからないなら
-  -- デフォルトのまま使うこと！
+  -- For FTS.
+  -- The default is good enough!
   CREATE INDEX entries_full_text_search
     ON entries
-    --「USING PGroonga」=「PGroongaを使う」
-    -- 主キーはそれっぽい順ソートのため！
+    -- "USING PGroonga" is important!
+    -- Primary key is for sort!
     USING PGroonga (id, title, content);
 
-= データ挿入
+= Insert data
 
   # coderay sql
 
-  -- 普通に挿入するだけでよい
+  -- Normal INSERT.
   INSERT INTO entries
     VALUES (1,
-            'Groongaで高速全文検索！',
-            '高速に全文検索したいですね！');
+            'Fast FTS with Groonga!',
+            'Fast FTS is needed!');
 
-= 全文検索
-
-  # coderay sql
-
-  SELECT title FROM entries
-    WHERE
-  -- &@~で全文検索
-  -- 「検索」と「高速」をAND検索
-      title &@~ '検索 高速' OR
-      content &@~ '検索 高速';
-
-= 全文検索：LIKE
+= FTS
 
   # coderay sql
 
   SELECT title FROM entries
     WHERE
-  -- LIKEでもインデックスが効く
-  --＝アプリを書き換えずに高速化可能
-  -- ただし&@~より性能が落ちる
-      title LIKE '%検索%' OR
-      content LIKE '%検索%';
+  -- &@~ is for FTS
+  -- AND search with "search" and "fast"
+      title &@~ 'search fast' OR
+      content &@~ 'search fast';
 
-= それっぽい順のソート
+= FTS: LIKE
+
+  # coderay sql
+
+  SELECT title FROM entries
+    WHERE
+  -- Index search for LIKE is supported
+  -- = Improve app perf without any changes
+  -- NOTE: &@~ is faster than LIKE
+      title LIKE '%search%' OR
+      content LIKE '%search%';
+
+= Sort
 
   # coderay sql
 
   SELECT
       title,
-      -- pgroonga_score(テーブル名)で
-      -- それっぽさを数値で取得
+      -- pgroonga_score(TABLE_NAME) returns
+      -- precision as number
       pgroonga_score(entries) AS score
     FROM entries
     WHERE -- ...
-    -- それっぽさでソート
+    -- Sort by precision
     ORDER BY score DESC LIMIT 10;
 
-= キーワードハイライト
+= Highlight keyword\n(('note:キーワードハイライト'))
 
   # image
   # src = images/php-document-search-search.png
   # relative_height = 100
 
-= HTML用にハイライト
+= Hightlight for HTML
 
   # coderay sql
 
   SELECT
     pgroonga_highlight_html(
       title,
-      -- クエリーから対象キーワードを抽出
-      pgroonga_query_extract_keywords('検索 高速'))
+      -- Extract keywords from query
+      pgroonga_query_extract_keywords('search fast'))
     FROM entries
-    WHERE title &@~ '検索 高速' OR
-          content &@~ '検索 高速';
+    WHERE title &@~ 'search fast' OR
+          content &@~ 'search fast';
 
-= HTML用ハイライト結果例
+= Highlight for HTML: Example
 
   # coderay html
 
-  <Groonga>で高速全文検索！
+  Fast search with <Groonga>!
   ↓
-  &lt;Groonga&gt;で ← タグをエスケープ
-  <span class="keyword">高速</span>
-  全文 ↑↓キーワードはclass付け
-  <span class="keyword">検索</span>！
+  <span class="keyword">Fast</span>
+  ↑↓ Keywords are marked up with "class"
+  <span class="keyword">search</span>！
+  with &lt;Groonga&gt;! ← Escape tag
 
-= 周辺テキスト
+= Texts around keyword\n(('note:キーワード周辺テキスト'))
 
   # image
   # src = images/php-document-search-search.png
   # relative_height = 100
 
-= HTML用に周辺テキスト取得
+= Texts around keyword for HTML
 
   # coderay sql
 
   SELECT
     pgroonga_snippet_html(
       content,
-      -- クエリーから対象キーワードを抽出
-      pgroonga_query_extract_keywords('検索 高速'))
+      -- Extract keywords from query
+      pgroonga_query_extract_keywords('search fast'))
     FROM entries
-    WHERE title &@~ '検索 高速' OR
-          content &@~ '検索 高速';
+    WHERE title &@~ 'search fast' OR
+          content &@~ 'search fast';
 
-= HTML用周辺テキスト結果例
+= Example
 
   # coderay html
 
-  ...<Groonga>で高速全文検索！...
+  ...fast search with <Groonga>!...
   ↓
   ARRAY[
-    ↓ 1つ目
-    'ga&gt;で ←タグをエスケープ
-     <span class="keyword">高速</span>
-     全文 ↑↓キーワードはclass付け
-     <span class="keyword">検索/span>！',
-    '...' ← 2つ目
+    ↓ First
+    '<span class="keyword">fast</span>
+    ↑↓ Keywords are marked up with "class"
+    <span class="keyword">search/span>！
+    with &lt;Groonga&gt;!', ← Escape tag
+    '...' ← Second
   ]
 
-= オートコンプリート
+= FTS system: Adv. features\n(('note:全文検索システム：高度な機能'))
+
+  * Auto complete\n
+    (('note:オートコンプリート'))
+  * Similar search\n
+    (('note:類似文書検索'))
+  * Synonym expansion\n
+    (('note:同義語展開'))
+
+= Auto complete\n(('note:オートコンプリート'))
 
   # image
   # src = images/php-document-search.png
   # relative_height = 100
 
-= オートコンプリート：必要なもの
+= Auto complete: Preparation\n(('note:オートコンプリート：準備'))
 
-  * マスターテーブル
-    * 候補（例：牛乳）
-    * 候補のヨミ（カタカナ・複数可）
-      * 例1：ギュウニュウ
-      * 例2：ミルク
+  * Master table\n
+    (('note:マスターテーブル'))
+    * Candidate\n
+      (('note:候補：（例：牛乳）'))
+    * Readings in Katakana\n
+      (Only for Japanese)\n
+      (('note:ヨミ（日本語の場合。カタカナ。複数登録可。）'))
+      * (('note:例：ギュウニュウ・ミルク'))
 
-= オートコンプリート：実装方法
+= Auto complete: Implementation\n(('note:オートコンプリート：実装方法'))
 
-  * 以下の検索のOR
-    * ヨミでの前方一致検索
-    * 候補を緩い全文検索
-  * 候補でソートして提示
+  * OR search with ...
+    * Prefix search against readings\n
+      (Only for Japanese)\n
+      (('note:ヨミを前方一致検索（日本語の場合。）'))
+    * Loose FTS against candidate\n
+      (('note:候補を緩く全文検索'))
+  * Sort by candidate\n
+    (('note:候補でソート'))
 
 (('tag:xx-small'))
-((<"https://pgroonga.github.io/ja/how-to/auto-complete.html"|URL:https://pgroonga.github.io/ja/how-to/auto-complete.html>))
+((<"https://pgroonga.github.io/how-to/auto-complete.html"|URL:https://pgroonga.github.io/how-to/auto-complete.html>))
 
-= オートコンプリート\nテーブル定義
+= Table definition
 
   # coderay sql
 
   CREATE TABLE terms (
-    -- 補完候補
+    -- Candidate
     term text,
-    -- この候補のヨミ（N個可）
+    -- Readings
     readings text[],
   );
 
-= オートコンプリート：データ例
+= Data example
 
   # coderay sql
 
   INSERT INTO terms VALUES (
-    '牛乳', -- 補完候補
+    'milk', -- Candidate
     ARRAY[
-     -- ヨミはカタカナで指定
-     'ギュウニュウ',
-     -- 「ミルク」でも補完可
-     'ミルク'
+     -- Reading in Katakana
+     'ギュウニュウ', -- "milk" in Japanese
+     -- Multiple readings
+     'ミルク'        -- "milk" in Katakana
     ]
   );
 
-= オートコンプリート\nデータ管理のポイント
+= Data management\n(('note:データ管理'))
 
-  * 普通のテーブルなので管理が楽
-    * 追加・削除・更新が楽
-    * ダンプ・リストアもいつも通り
-    * レプリケーションもいつも通り
+  * Easy to maintain because it's a normal table\n
+    (('note:普通のテーブルなので管理が楽'))
+    * Easy to insert/delete/update\n
+      (('note:追加・削除・更新が楽'))
+    * Normal backup and replication\n
+      (('note:ダンプ・リストアもレプリケーションもいつも通り'))
 
-= オートコンプリート\n前方一致用インデックス
+= Index for prefix search\n(('note:前方一致用インデックス'))
 
   # coderay sql
 
@@ -512,201 +635,203 @@ PostgreSQL経由で\n
     -- ...text_array_term_search...
     (readings pgroonga_text_array_term_search_ops_v2);
 
-= オートコンプリート\n緩い全文検索用
+= Index for loose FTS\n(('note:緩い全文検索用インデックス'))
 
   # coderay sql
 
   CREATE INDEX loose_search ON terms
     USING PGroonga (term)
-    -- 緩い全文検索用トークナイザー
+    -- Tokenizer for loose full text search
     WITH (tokenizer='TokenBigramSplitSymbolAlphaDigit');
 
-= オートコンプリート\n検索方法
+= How to search\n(('note:検索方法'))
 
   # coderay sql
 
   SELECT term FROM terms
-          -- ヨミで前方一致検索
-    WHERE readings &^~ '${入力}' OR
-          -- 緩い全文検索
-          term &@ '${入力}'
-    ORDER BY term LIMIT 10; -- ソート
+  -- Prefix search against readings
+    WHERE readings &^~ '${INPUT}' OR
+  -- Loose full text search
+          term &@ '${INPUT}'
+    ORDER BY term LIMIT 10; -- Sort
 
-= オートコンプリート\n検索例：漢字1
-
-  # coderay sql
-
-  -- ユーザーが「牛」を入力した場合
-  SELECT term FROM terms
-          -- ヨミで前方一致検索
-    WHERE readings &^~ '牛' OR
-          -- 緩い全文検索（ヒット）
-          term &@ '牛'
-    ORDER BY term LIMIT 10; -- ソート
-
-= オートコンプリート\n検索例：漢字2
+= Search example: Candidate\n(('note:検索例：候補'))
 
   # coderay sql
 
-  -- ユーザーが「乳」を入力した場合
+  -- User inputs "il"
   SELECT term FROM terms
-          -- ヨミで前方一致検索
-    WHERE readings &^~ '乳' OR
-          -- 緩い全文検索（ヒット）
-          term &@ '乳'
-    ORDER BY term LIMIT 10; -- ソート
+  -- Prefix search against readings
+    WHERE readings &^~ 'il' OR
+  -- Loose full text search (Hit)
+          term &@ 'li'
+    ORDER BY term LIMIT 10; -- Sort
 
-= オートコンプリート\n検索例：カタカナ
+= Search example: Katakana\n(('note:検索例：カタカナ'))
 
   # coderay sql
 
-  -- ユーザーが「ギュウ」を入力した場合
+  -- User inputs "ギュウ"
   SELECT term FROM terms
-       -- ヨミで前方一致検索（ヒット）
+  -- Prefix search against readings (Hit)
     WHERE readings &^~ 'ギュウ' OR
-          -- 緩い全文検索
+  -- Loose full text search (Hit)
           term &@ 'ギュウ'
-    ORDER BY term LIMIT 10; -- ソート
+    ORDER BY term LIMIT 10; -- Sort
 
-= オートコンプリート\n検索例：ひらがな
+= Search example: Hiragana\n(('note:検索例：ひらがな'))
 
   # coderay sql
 
-  -- ユーザーが「ぎゅう」を入力した場合
+  -- User inputs "ぎゅう"
   SELECT term FROM terms
-       -- ヨミで前方一致検索（ヒット）
+  -- Prefix search against readings (Hit)
     WHERE readings &^~ 'ぎゅう' OR
-          -- 緩い全文検索
+  -- Loose full text search
           term &@ 'ぎゅう'
-    ORDER BY term LIMIT 10; -- ソート
+    ORDER BY term LIMIT 10; -- Sort
 
-= オートコンプリート\n検索例：ローマ字
+= Search example: Romaji\n(('note:検索例：ローマ字'))
 
   # coderay sql
 
-  -- ユーザーが「gyu」を入力した場合
+  -- User inputs "gyu"
   SELECT term FROM terms
-       -- ヨミで前方一致検索（ヒット）
+  -- Prefix search against readings (Hit)
     WHERE readings &^~ 'gyu' OR
-          -- 緩い全文検索
+  -- Loose full text search
           term &@ 'gyu'
-    ORDER BY term LIMIT 10; -- ソート
+    ORDER BY term LIMIT 10; -- Sort
 
-= 同義語展開
+= Synonym expansion\n(('note:同義語展開'))
 
-  * 同義語
-    * 同じ意味だが表記が異なる語
-    * 例：「牛乳」と「ミルク」
-  * どの表記でもヒットして欲しい
-    * 同義語展開→同義語すべてでOR検索
+  * Synonym\n
+    (('note:同義語'))
+    * Same mean but different notation\n
+      (('note:同じ意味だが表記が異なる語'))
+    * e.g.: "PostgreSQL" and "PG"\n
+      (('note:例：「PostgreSQL」と「ポスグレ」'))
 
-= 同義語展開\n実装方法
+= Synonym expansion\n(('note:同義語展開'))
 
-  * 同義語管理テーブルを作成
-  * クエリー内の同義語を展開
-  * 展開後のクエリーで検索
+  * Users don't want to care\n
+    (('note:ユーザーは気にしたくない'))
+  * Synonym expansion\n
+    (('note:同義語展開'))
+    * OR search with all synonyms\n
+      (('note:同義語すべてでOR検索'))
+
+= Implementation\n(('note:実装方法'))
+
+  * Create synonym table\n
+    (('note:同義語管理テーブルを作成'))
+  * Expand synonyms in query\n
+    (('note:クエリー内の同義語を展開'))
+  * Search by expanded query\n
+    (('note:展開後のクエリーで検索'))
 
 (('tag:xx-small'))
-((<"https://pgroonga.github.io/ja/reference/functions/pgroonga-query-expand.html"|URL:https://pgroonga.github.io/ja/reference/functions/pgroonga-query-expand.html>))
+((<"https://pgroonga.github.io/reference/functions/pgroonga-query-expand.html"|URL:https://pgroonga.github.io/reference/functions/pgroonga-query-expand.html>))
 
-= 同義語展開：テーブル定義
+= Table definition
 
   # coderay sql
   CREATE TABLE synonyms (
-    -- 展開対象の語
+    -- Term to be expanded
     term text,
-    -- 同義語のリスト
-    -- term自身も含める
-    -- 含めない場合はtermが検索禁止語になる
+    -- Synonym list.
+    -- Including the "term" itself.
+    -- If you don't input the "term",
+    -- the "term" is unsearchable term.
     terms text[]
   );
 
-= 同義語展開：データ例
+= Data example
 
   # coderay sql
   INSERT INTO synonyms
-    VALUES ('牛乳', -- 「牛乳」を展開
-            ARRAY['牛乳', 'ミルク']),
-           ('ミルク', -- 「ミルク」を展開
-            ARRAY['ミルク', '牛乳']);
+    VALUES ('PostgreSQL', -- Expand "PostgreSQL"
+            ARRAY['PostgreSQL', 'PG']),
+           ('PG', -- Expand "PG"
+            ARRAY['PG', 'PostgreSQL']);
 
-= 同義語展開：データ管理のポイント
+= Data management\n(('note:データ管理'))
 
-  * 普通のテーブルなので管理が楽
-    * 追加・削除・更新が楽
-    * ダンプ・リストアもいつも通り
-    * レプリケーションもいつも通り
+  * Easy to maintain because it's a normal table\n
+    (('note:普通のテーブルなので管理が楽'))
+    * Easy to insert/delete/update\n
+      (('note:追加・削除・更新が楽'))
+    * Normal backup and replication\n
+      (('note:ダンプ・リストアもレプリケーションもいつも通り'))
 
-= 同義語展開：インデックス定義
+= Index definition
 
   # coderay sql
   CREATE INDEX synonym_search ON synonyms
     USING PGroonga
     -- ...text_term_search...
-    -- termで完全一致検索をするため
+    -- For equal search
     (term pgroonga_text_term_search_ops_v2);
 
-= 同義語展開：確認方法
+= Confirm\n(('note:確認方法'))
 
   # coderay sql
 
   SELECT pgroonga_query_expand(
-    'synonyms', -- テーブル名
-    'term', -- 展開対象のカラム名
-    'terms', -- 対応する同義語配列のカラム名
-    '牛乳' -- クエリー
+    'synonyms', -- Table name
+    'term', -- Column name to be expanded
+    'terms', -- Column name for synonyms
+    'PostgreSQL' -- Query
   );
-  -- '((牛乳) OR (ミルク))'
+  -- '((PostgreSQL) OR (PG))'
 
-= 同義語展開：検索方法
+= Search\n(('note:検索方法'))
 
   # coderay sql
   SELECT title FROM entries
     WHERE
-   -- title &@~ 'アイス ((牛乳) OR (ミルク))'になる
+   -- title &@~ 'DB ((PostgreSQL) OR (PG))'
       title &@~
         pgroonga_query_expand('synonyms',
                               'term',
                               'terms',
-                              'アイス 牛乳');
+                              'DB PostgreSQL');
 
-= 類似文書検索
+= Similar search\n(('note:類似文書検索'))
 
-  # image
-  # src = images/php-document-search-similar-search.png
-  # relative_height = 100
+  * Query is document itself\n
+    (('note:検索クエリーは文書そのもの'))
+    * Not keyword\n
+      (('note:キーワードではない'))
+  * Use case\n
+    (('note:利用例'))
+    * Show related entries\n
+      (('note:関連エントリーの提示に使える'))
 
-= 類似文書検索
+= Implementation\n(('note:実現方法'))
 
-  * 検索クエリーは文書そのもの
-    * キーワードではない
-  * 関連エントリーの提示に使える
-    * メタデータがあるなら組み合わせる\n
-      →精度向上
-    * メタデータ：タグ・行動履歴など
+  * Create dedicated index\n
+    (('note:類似検索用のインデックスを作る'))
+    * Use tokenizer for target language\n
+      (('note:対象の言語に合わせた処理で精度向上'))
+    * e.g.: MeCab based tokenizer for Japanese\n
+      (('note:例：日本語ならMeCabベースのトークナイザーを活用'))
+  * Use dedicated operator\n
+    (('note:類似検索用の演算子を使う'))
 
-= 類似文書検索：実現方法
-
-  * 類似検索用インデックスが必要
-    * 自然言語に合わせた処理で精度向上
-    * 日本語ならMeCabを活用
-  * 類似検索用の演算子を使う
-
-= 類似文書検索：インデックス定義
+= Index definition
 
   # coderay sql
 
   CREATE INDEX entries_similar_search
     ON entries
-    -- タイトルと内容を合わせたテキストをインデックス
-    -- 理由1：タイトルも重要→対象に加えて精度向上
-    -- 理由2：PostgreSQLが全文検索インデックスと
-    --        区別できるように
+    -- Target: Both title and content
+    -- Reason: Title is important
     USING PGroonga (id, (title || ' ' || content))
-    -- TokenMecabを使うと精度向上
+    -- TokenMecab is good for Japanese
     WITH (tokenizer='TokenMecab');
 
-= 類似文書検索：検索方法
+= Search
 
   # coderay sql
 
@@ -714,34 +839,37 @@ PostgreSQL経由で\n
       pgroonga_score(entries) AS score
     FROM entries
     WHERE
-      -- &@*で類似文書検索
-      -- 既存文書の内容をそのまま指定
+      -- &@* is operator for similar search.
+      -- Search with existing document.
       (title || ' ' || content) &@*
-        '...Groongaで高速全文検索！...'
+        '...fast search with Groonga!...'
     ORDER BY score DESC LIMIT 3;
 
-= 類似文書検索：結果例
+= Result example\n(('note:結果例'))
 
-  クエリー：
-     ...Groongaで高速全文検索！...
+  Query:
+     ...search with Groonga!...
 
-  ヒット例：
-     ...PGroongaで高速全文検索！...
+  Hit example:
+     ...search with PGroonga!...
 
-= おさらい：基本機能
+= Wrap up: Basic features\n(('note:全文検索システム：基本機能'))
 
-  * 高速全文検索＋ソート
-  * 検索キーワードハイライト
-  * キーワード周辺テキスト表示
+  * Fast FTS + sort\n
+    (('note:高速全文検索＋ソート'))
+  * Show texts around keyword\n
+    (('note:キーワード周辺テキスト表示'))
+  * Highlight keyword\n
+    (('note:検索キーワードハイライト'))
 
-= おさらい：高度な機能
+= Wrap up: Adv. features\n(('note:全文検索システム：高度な機能'))
 
-  * オートコンプリート
-    * ローマ字対応（zen→全文検索）
-  * 類似文書検索
-  * 同義語展開
-    * 「牛乳」→\n
-      「牛乳 OR ミルク」
+  * Auto complete\n
+    (('note:オートコンプリート'))
+  * Similar search\n
+    (('note:類似文書検索'))
+  * Synonym expansion\n
+    (('note:同義語展開'))
 
 = 全文検索システムの実装\n次の一歩
 
