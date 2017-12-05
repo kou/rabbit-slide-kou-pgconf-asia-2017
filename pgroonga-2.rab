@@ -43,8 +43,8 @@ Many tests\n
 
   * e.g.: Text data in office docs in file servers\n
     (('note:例：ファイルサーバー内のオフィス文書内のテキスト'))
-  * e.g.: Item descriptions, chat logs and so on\n
-    (('note:例：商品説明やチャットログなど'))
+  * e.g.: Item descriptions, chat logs, Wiki data, ...\n
+    (('note:例：商品説明やチャットログ、Wikiのデータなど'))
 
 = FTS system: Goal\n(('note:全文検索システム：目的'))
 
@@ -64,7 +64,7 @@ when you need\n
 
 = When you need\n(('note:必要なときに活用'))
 
-  * 😞 Need many time to find\n
+  * 😞 Need many times to find\n
     (('note:なかなか見つからない'))
   * 😃 Find in no time\n
     (('note:すぐに見つかる'))
@@ -95,7 +95,7 @@ when you need\n
     (('note:実装コスト大'))
     * Learn how to use from scratch\n
       (('note:使い方を1から学ぶ必要がある'))
-    * How to impl. data sync?\n
+    * How to implement data sync?\n
       (('note:マスターデータの同期はどうする？'))
 
 = FTS server: Cons2\n(('note:全文検索サーバー案：デメリット2'))
@@ -135,7 +135,7 @@ when you need\n
   * Use FTS engine via PostgreSQL (SQL)\n
     (('note:PostgreSQL経由（SQL）で全文検索エンジンを使う'))
 
-= Pros(('note:メリット'))
+= Pros\n(('note:メリット'))
 
   * Fast and rich features\n
     (('note:高速で豊富な機能'))
@@ -173,11 +173,11 @@ when you need\n
     * FTS engine via PostgreSQL\n
       (('note:PostgreSQL経由で全文検索エンジン'))
 
-= Option to be described\n(('note:説明する選択肢'))
+= Described option\n(('note:説明する選択肢'))
 
 FTS engine via\n
 PostgreSQL\n
-(('note:ostgreSQL経由で全文検索エンジン'))
+(('note:PostgreSQL経由で全文検索エンジン'))
 
 = FTS engine: Groonga\n(('note:全文検索エンジン：Groonga（ぐるんが）'))
 
@@ -212,8 +212,8 @@ PostgreSQL\n
 
   * PostgreSQL index\n
     (('note:PostgreSQLのインデックス'))
-    * Alternative of GIN\n
-      (('note:B-tree・GINなどと同じレイヤー'))
+    * Alternative of GIN, RUM, ...\n
+      (('note:GIN・RUMなどと同じレイヤー'))
   * Usage\n
     (('note:使用方法'))
     * (({CREATE INDEX ...}))\n
@@ -235,8 +235,6 @@ PostgreSQL\n
     (('note:少ないデータ'))
     * Enough performance\n
       (('note:十分実用的'))
-    * 400 chars X 0.2M recs: < 1sec\n
-      (('note:400文字×20万件くらいなら1秒とか'))
   * Not small data\n
     (('note:少なくないデータ'))
     * Need to tune\n
@@ -258,7 +256,7 @@ in most case\n
 
   * Sort is important in FTS\n
     (('note:全文検索ではソート順が重要'))
-  * Users checks only\n
+  * Users check only\n
     the first N entries\n
     (('note:ユーザーは先頭N件しか見ない'))
 
@@ -281,6 +279,17 @@ in most case\n
     (('note:アジア圏の言語のサポートは十分ではない'))
   * 👎Unable to sort\n
     (('note:それっぽい順のソート不可'))
+
+= RUM
+
+  * RUM = GIN + position\n
+    (('note:RUMは位置情報付きのGIN'))
+    * (('tag:xx-small'))
+      ((<"https://github.com/postgrespro/rum"|URL:https://github.com/postgrespro/rum>))
+  * pg_trgm/pg_bigm are slow for much matches case\n
+    (('note:pg_trgmとpg_bigmはマッチ数が多いと遅くなる'))
+    * RUM will solve it\n
+      (('note:GINの代わりにRUMを使うことで解決できるかも！'))
 
 = PGroonga
 
@@ -382,9 +391,18 @@ Great! But why?\n
 
   * PGroonga 2 provides\n
     both 1 API and 2 API\n
-    (('note:PGroonag 2は1用のAPIも2用のAPIも両方提供'))
+    (('note:PGroonga 2は1用のAPIも2用のAPIも両方提供'))
     * Can use PGroonga 2 with 1 API\n
-      (('note:PGroonga 1のAPIでPGroonag 2を使える'))
+      (('note:PGroonga 1のAPIでPGroonga 2を使える'))
+
+= Painless upgrade
+
+  * The last PGroonga 1.X\n
+    provides both 1 API and\n
+    partially 2 API\n
+    (('note:PGroonga 1系の最終版は1用のAPIも2用のAPIの一部も提供'))
+    * Can use PGroonga 1 with 2 API\n
+      (('note:PGroonga 2のAPIでPGroonga 1を使える'))
 
 = Painless upgrade
 
@@ -585,7 +603,7 @@ Great! But why?\n
       (Only for Japanese)\n
       (('note:ヨミを前方一致検索（日本語の場合。）'))
     * Loose FTS against candidate\n
-      (('note:候補を緩く全文検索'))
+      (('note:候補をゆるく全文検索'))
   * Sort by candidate\n
     (('note:候補でソート'))
 
@@ -597,10 +615,8 @@ Great! But why?\n
   # coderay sql
 
   CREATE TABLE terms (
-    -- Candidate
-    term text,
-    -- Readings
-    readings text[],
+    term text, -- Candidate
+    readings text[], -- Readings
   );
 
 = Data example
@@ -633,7 +649,8 @@ Great! But why?\n
   CREATE INDEX prefix_search ON terms
     USING PGroonga
     -- ...text_array_term_search...
-    (readings pgroonga_text_array_term_search_ops_v2);
+    (readings
+     pgroonga_text_array_term_search_ops_v2);
 
 = Index for loose FTS\n(('note:緩い全文検索用インデックス'))
 
@@ -675,7 +692,7 @@ Great! But why?\n
   SELECT term FROM terms
   -- Prefix search against readings (Hit)
     WHERE readings &^~ 'ギュウ' OR
-  -- Loose full text search (Hit)
+  -- Loose full text search
           term &@ 'ギュウ'
     ORDER BY term LIMIT 10; -- Sort
 
