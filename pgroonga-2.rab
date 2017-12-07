@@ -681,7 +681,7 @@ Great! But why?\n
   -- Prefix search against readings
     WHERE readings &^~ 'il' OR
   -- Loose full text search (Hit)
-          term &@ 'li'
+          term &@ 'il'
     ORDER BY term LIMIT 10; -- Sort
 
 = Search example: Katakana\n(('note:検索例：カタカナ'))
